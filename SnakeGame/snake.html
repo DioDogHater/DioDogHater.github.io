@@ -69,8 +69,8 @@ function drawSnake(){
 
 var pickupCoin = new Audio("pickupCoin.wav")
 var explosion = new Audio("explosion.wav")
-explosion.volume = 0.75
-pickupCoin.volume = 0.75
+pickupCoin.volume = 0.6
+explosion.volume = 0.6
 
 function gameOver(){
 	explosion.play()
@@ -82,7 +82,6 @@ function gameOver(){
 }
 
 function saveHighScore(){
-	console.log("HighScore saved: "+HighScore)
 	localStorage.setItem("SnakeHighScore",HighScore.toString())
 }
 
@@ -92,7 +91,6 @@ window.addEventListener("beforeunload",(e)=>{
 
 function loadHighScore(){
 	var hs = localStorage.getItem("SnakeHighScore")
-	console.log("HighScore loaded: "+hs)
 	if(hs){HighScore = Number(hs);}
 }loadHighScore()
 
@@ -155,6 +153,27 @@ window.addEventListener("keydown",function(e){
 		dir.x = 1
 		dir.y = 0
 	}
+})
+
+var touchstart = {x:0,y:0}
+var touchend = {x:0,y:0}
+function checkDirection(){
+	var diff = {x:Math.abs(touchend.x-touchstart.x),y:Math.abs(touchend.y-touchstart.y)}
+	if(diff.x > diff.y){
+		return (touchend.x<touchstart.x) ? {x:-1,y:0} : {x:1,y:0}
+	}else if(diff.y > diff.x){
+		return (touchend.y<touchstart.y) ? {x:0,y:-1} : {x:0,y:1}
+	}
+}
+window.addEventListener("touchstart",(e)=>{
+	touchstart = {x: e.changedTouches[0].screenX, y: e.changedTouches[0].screenY}
+})
+window.addEventListener("touchend",(e)=>{
+	touchend = {x: e.changedTouches[0].screenX, y: e.changedTouches[0].screenY}
+	var swipe = checkDirection()
+	if((-swipe.x == dir.x || -swipe.y == dir.y) && (dir.x != 0 || dir.y != 0)){return;}
+	dir.x = swipe.x
+	dir.y = swipe.y
 })
 
 window.setInterval(function(){
