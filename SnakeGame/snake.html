@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Snake</title>
+<style>
+body {
+	margin: 0;
+	border: 0;
+}
+
+canvas {
+	border: 1px solid black;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+const canvas = document.getElementById("canvas")
+const ctx = canvas.getContext("2d")
+
+function resizeCanvas(){
+	canvas.width = Math.min(window.innerWidth,window.innerHeight)-5
+	canvas.height = Math.min(window.innerWidth,window.innerHeight)-5
+}resizeCanvas()
+
+window.addEventListener("resize",resizeCanvas)
+
+const CELLS = 32
+var score = 0
+var HighScore = 10
+
+function clearScreen(){
+	ctx.clearRect(0,0,canvas.width,canvas.height)
+}
+
+function fillRect(x,y,w,h,color="#000000"){
+	ctx.fillStyle = color
+	ctx.fillRect(x,y,w,h)
+}
+
+const food = {x:0,y:0}
+
+const snake = [{x:0,y:0}]
+const dir = {x:0,y:0}
+
+function spawnFood(){
+	food.x = Math.floor(Math.random() * (CELLS-1))
+	food.y = Math.floor(Math.random() * (CELLS-1))
+	for(i = 0; i < snake.length; i++){
+		if(snake[i].x == food.x && snake[i].y == food.y){
+			spawnFood()
+			break
+		}
+	}
+}spawnFood()
+
+function drawFood(){
+	fillRect(food.x*(canvas.width/CELLS),food.y*(canvas.height/CELLS),
+		canvas.width/CELLS,canvas.height/CELLS,"red")
+}
+
+function drawSnake(){
+	for(i = 0; i < snake.length; i++){
+		fillRect((canvas.width/CELLS)*snake[i].x,(canvas.height/CELLS)*snake[i].y,
+			canvas.width/CELLS,canvas.height/CELLS,"green")
+	}
+}
+
+var pickupCoin = new Audio("pickupCoin.wav")
+var explosion = new Audio("explosion.wav")
+
+function gameOver(){
+	explosion.play()
+	dir.x = 0; dir.y = 0; 
+	snake.length = 1; snake[0].x = 0; snake[0].y = 0;
+	spawnFood()
+	score = 0
+	saveHighScore()
+}
+
+function saveHighScore(){
+	console.log("HighScore saved: "+HighScore)
+	localStorage.setItem("SnakeHighScore",HighScore.toString())
+}
+
+window.addEventListener("beforeunload",(e)=>{
+	saveHighScore()
+})
+
+function loadHighScore(){
+	var hs = localStorage.getItem("SnakeHighScore")
+	console.log("HighScore loaded: "+hs)
+	if(hs){HighScore = Number(hs);}
+}loadHighScore()
+
+function checkCollision(){
+	if(snake[0].x < 0 || snake[0].x > CELLS-1 || snake[0].y < 0 || snake[0].y > CELLS-1){
+		return true
+	}
+	for(i = 0; i < snake.length; i++){
+		for(x = i+1; x < snake.length; x++){
+			if(snake[i].x == snake[x].x && snake[i].y == snake[x].y){
+				return true
+			}
+		}
+	}
+	return false
+}
+
+function eatFood(){
+	if(snake[0].x == food.x && snake[0].y == food.y){
+		pickupCoin.play()
+		score++
+		if(score > HighScore){HighScore = score;}
+		snake[snake.length] = {x:snake[snake.length-1].x,
+					y:snake[snake.length-1].y}
+		spawnFood()
+	}
+}
+
+function moveSnake(){
+	for(i = snake.length-1; i > 0; i--){
+		snake[i].x = snake[i-1].x
+		snake[i].y = snake[i-1].y
+	}
+	snake[0].x += dir.x
+	snake[0].y += dir.y
+	if(checkCollision()){gameOver();return;}
+	eatFood()
+}
+
+function displayScore(){
+	ctx.fillStyle = "black"
+	ctx.font = "25px Arial"
+	ctx.fillText("Score: "+score,canvas.width-(12.5*("Score: "+score).length),25)
+	ctx.fillStyle = "red"
+	ctx.font = "12px Arial"
+	ctx.fillText("High Score: "+HighScore,canvas.width-(6*("High Score: "+HighScore).length),37)
+}
+
+window.addEventListener("keydown",function(e){
+	if(e.key == "w" && dir.y != 1){
+		dir.x = 0
+		dir.y = -1
+	}if(e.key == "a" && dir.x != 1){
+		dir.x = -1
+		dir.y = 0
+	}if(e.key == "s" && dir.y != -1){
+		dir.x = 0
+		dir.y = 1
+	}if(e.key == "d" && dir.x != -1){
+		dir.x = 1
+		dir.y = 0
+	}
+})
+
+window.setInterval(function(){
+	clearScreen()
+	drawFood()
+	moveSnake()
+	drawSnake()
+	displayScore()
+},1000/8)
+</script>
+</body>
+</html>
