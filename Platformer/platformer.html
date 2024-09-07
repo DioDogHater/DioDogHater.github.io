@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Platformer</title>
+<style>
+body {
+	margin: 0;
+	border: 0;
+	background-repeat: 0;
+	background-attachment: fixed;
+	background-image: linear-gradient(to bottom right, black, #040404);
+}
+canvas {
+	margin: 0;
+	border: 2px solid dimgrey;
+}
+</style>
+</head>
+<body>
+<center><canvas id="canvas"></canvas></center>
+<div style="margin: 1%;">
+	<label for="mapdata" style="color:white;margin:0;font-family:monospace;font-size:20px;">ENTER PLAYABLE MAP DATA:</label>
+	<input id="mapdata" type="text" style="font-family:monospace;font-size:20px;width:40%;"></input>
+	<button style="margin:0.25%; font-family: monospace; font-size: 20px;" id="loadmapdata">LOAD</button>*
+	<button style="margin:0.25%; font-family: monospace; font-size: 20px;" onclick="getElementById('mapdata').value = ''">CLEAR</button>
+	<button id="mapdatacopy" style="margin:1%;font-family:monospace;font-size:20px;">COPY MAP DATA</button>
+	<div>
+		<label for="savename" style="margin:0.25%;font-family:monospace;font-size:20px;color: white;">SAVE NAME:</label>
+		<input type="text" id="savename" value="MyMap" style="margin:0.25%;font-family:monospace;font-size:20px;"></input>
+		<button id="savemapdata" style="margin:0.25%;font-family:monospace;font-size:20px;">SAVE MAP</button>
+		<button id="loadsavemapdata" style="margin:0.25%;font-family:monospace;font-size:20px;">LOAD SAVED MAP</button>
+		<button id="deletemapdata" style="margin:0.25%;font-family:monospace;font-size:20px;color: red;">DELETE</button>
+	</div>
+</div>
+<div style="float:left;margin: 0.5%; width: 55%;">
+	<h1 style="margin: 10px; color: white; font-family: monospace;">--- ALL SAVES ---</h1>
+	<ul id="savelist" style="margin:0; color: white; font-family: monospace; font-size: 20px; text-align: left;"></ul>
+</div>
+<div style="float:right;margin: 0.5%; width: 40%;">
+	<center><h1 style="margin: 10px; color: white; font-family: monospace;">New features</h1></center>
+	<ul style="margin:0; color: white; font-family: monospace; font-size: 20px; text-align: left;">
+		<li>RELEASED THE GAME!!</li>
+		<li>Added MovingPlatform</li>
+		<li>Added a timer to the MovingPlatform to avoid crashing the game</li>
+		<li>Added ElevatorPlatform</li>
+		<li>Added Checkpoints and a checkpoint system</li>
+		<li>Changed the spawn's indicator and the UI (website part too)</li>
+		<li>Bug fixes (mostly phyisics and collison bugs)</li>
+		<li>ADDED SAVES AND MAP SHARING!!!!!</li>
+	</ul>
+</div>
+<div style="margin:1%;text-align:-webkit-center;clear:both;">
+	<p style="font-family:monospace;font-size:15px;color:white;text-align:-webkit-center;">PS: If your mouse's position is offset, scroll all the way up.</p>
+</div>
+<center><div style="margin:2%;width:75%;">
+<h1 style="margin: 10px; color: white; font-family: monospace;">CONTROLS:</h1>
+<ul style="margin: 10px; font-size: 150%; color: white; font-family: monospace;text-align:left;">
+<li><i>A</i>,<i>D</i> -> Left and Right<br></li>
+<li><i>Space</i> -> Jump<br></li>
+<li><i>W</i>,<i>S</i> -> Up and Down (while flying)<br></li>
+<li><i>R</i> -> Respawn player (if you fall or get stuck)<br></li>
+<li><i>B</i>,<i>V</i> -> Toggle Duild Mode and Destruction Mode<br></li>
+<li><i>Z</i> -> Toggle Flying (while in build or destruction mode)<br></li>
+<li><i>Ctrl+Minus</i> -> Reset the map in destruction mode</li>
+<li><i>Q</i> -> Reset checkpoints (build mode)</li>
+<li><i>Shift</i> -> Toggle grid in build mode</li>
+<li><i>0-9</i> -> Change the brush in build mode</li>
+<i><b>Other controls are on screen!</b></i>
+</ul><h1 style="margin: 10px; color: white; font-family: monospace;">SAVE/LOAD:</h1>
+<ul style="margin: 10px; font-size: 150%; color: white; font-family: monospace;text-align:left;">
+<li><i>COPY MAP DATA</i> -> Copy current map in a text format (to share it)</li>
+<li><i>LOAD</i>(Next to the text input) -> Load the map inside the text input field</li>
+<li><i>CLEAR</i> -> Clear the text input field</li>
+<li><i>SAVE NAME</i> -> Enter the save's name to save/load</li>
+<li><i>SAVE MAP</i> -> Save the current map using the entered save name</li>
+<li><i>LOAD MAP</i> -> Load the map with the current save name</li>
+<li><i>DELETE</i> -> Delete the map with the current save name</li>
+<li><i>Click on save in the saves list</i> -> Uses the save name that you clicked on</li>
+</ul></div></center>
+<script src="main.js"></script>
+</body>
+</html>
